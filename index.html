@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Hotel Reservation Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .available {
+            background-color: #38a169;
+        }
+        .booked {
+            background-color: #e53e3e;
+            cursor: not-allowed;
+        }
+        .partial {
+            background-color: #d69e2e;
+        }
+        .selected {
+            background-color: #4299e1;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold mb-6 text-center">Luxury Hotel Reservation</h1>
+
+        <!-- Room Selection Section -->
+        <div class="flex flex-wrap justify-between mb-6">
+            <div class="w-full md:w-1/2">
+                <label for="roomType" class="block mb-2 font-medium">Select Room</label>
+                <select id="roomType" class="w-full p-2 border rounded">
+                    <option value="loft">Ironman Themed Loft - RM 400.00/night</option>
+                    <option value="suite">Penthouse Suite - RM 800.00/night</option>
+                    <option value="deluxe">Deluxe Room - RM 600.00/night</option>
+                </select>
+            </div>
+            <div class="w-full md:w-1/4">
+                <label for="guests" class="block mb-2 font-medium">Guests</label>
+                <select id="guests" class="w-full p-2 border rounded">
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                </select>
+            </div>
+            <div class="w-full md:w-1/4">
+                <label for="nights" class="block mb-2 font-medium">Nights</label>
+                <input id="nights" type="number" min="1" value="1" class="w-full p-2 border rounded">
+            </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="calendar mb-6">
+            <!-- Calendar dynamically populated by JavaScript -->
+        </div>
+
+        <!-- Total Price Calculation -->
+        <div class="text-lg font-semibold mb-4">Total Price: <span id="totalPrice">RM 400.00</span></div>
+        <button class="bg-blue-500 text-white px-6 py-2 rounded">Confirm Booking</button>
+    </div>
+
+    <script>
+        const roomTypeEl = document.getElementById('roomType');
+        const nightsEl = document.getElementById('nights');
+        const totalPriceEl = document.getElementById('totalPrice');
+
+        const roomPrices = {
+            loft: 400,
+            suite: 800,
+            deluxe: 600
+        };
+
+        // Update the total price dynamically when room type or nights change
+        function updateTotalPrice() {
+            const selectedRoom = roomTypeEl.value;
+            const nights = parseInt(nightsEl.value);
+            const pricePerNight = roomPrices[selectedRoom];
+            const totalPrice = pricePerNight * nights;
+            totalPriceEl.textContent = `RM ${totalPrice.toFixed(2)}`;
+        }
+
+        roomTypeEl.addEventListener('change', updateTotalPrice);
+        nightsEl.addEventListener('input', updateTotalPrice);
+
+        // Render calendar
+        function renderCalendar() {
+            const calendar = document.querySelector('.calendar');
+            const daysInMonth = 30; // Example days in month for demo
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.textContent = i;
+                dayEl.classList.add('calendar-day', i % 2 === 0 ? 'available' : 'booked');
+                calendar.appendChild(dayEl);
+            }
+        }
+
+        // Initialize the calendar
+        renderCalendar();
+    </script>
+</body>
+</html>
